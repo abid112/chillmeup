@@ -1,21 +1,57 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Play, Clock, Cloud, Music, RefreshCcw, Activity, Zap } from "lucide-react";
+import { Sparkles, Play, Clock, Cloud, Music, RefreshCcw, Activity, Zap, MapPin, Navigation } from "lucide-react";
 import { useMoodAnalyzer } from "@/hooks/useMoodAnalyzer";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
-  const { state, progress, stepText, fakeMessage, result, analyze, reset } = useMoodAnalyzer();
+  const {
+    state,
+    progress,
+    stepText,
+    fakeMessage,
+    result,
+    requestLocation,
+    skipLocation,
+    analyze,
+    reset,
+  } = useMoodAnalyzer();
+
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
+  const [locationPending, setLocationPending] = useState(false);
 
   const handleStart = () => {
-    analyze();
+    requestLocation();
+  };
+
+  const handleAllowAndAnalyze = async () => {
+    setLocationPending(true);
+    // Ask browser for position — this triggers the native permission dialog
+    let resolvedCoords: { lat: number; lon: number } | null = null;
+    try {
+      const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          timeout: 30000,
+          enableHighAccuracy: false,
+        });
+      });
+      resolvedCoords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+    } catch (_) {
+      resolvedCoords = null;
+    }
+    setLocationPending(false);
+    analyze(resolvedCoords);
+  };
+
+  const handleSkip = () => {
+    skipLocation();
+    analyze(null);
   };
 
   return (
     <div className="min-h-[100dvh] w-full bg-background text-foreground overflow-hidden relative font-sans selection:bg-primary/30">
-      {/* Background ambient effects */}
+      {/* Background ambient blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] rounded-full bg-primary/10 blur-[120px] mix-blend-screen" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-blue-600/10 blur-[100px] mix-blend-screen" />
@@ -23,6 +59,8 @@ export default function Home() {
       </div>
 
       <AnimatePresence mode="wait">
+
+        {/* ── LANDING ── */}
         {state === "idle" && (
           <motion.div
             key="landing"
@@ -50,7 +88,6 @@ export default function Home() {
             </div>
 
             <div className="w-full space-y-8 bg-card/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
-              {/* Auto-detect badge */}
               <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary/10 border border-primary/20 text-sm text-primary/90">
                 <Zap className="w-4 h-4 shrink-0" />
                 <span>Energy level will be detected automatically from your browser activity</span>
@@ -100,6 +137,97 @@ export default function Home() {
           </motion.div>
         )}
 
+        {/* ── LOCATION PERMISSION ── */}
+        {state === "requesting-location" && (
+          <motion.div
+            key="location"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-6 max-w-md mx-auto text-center"
+          >
+            {/* Pulsing location icon */}
+            <div className="relative w-36 h-36 mb-10 flex items-center justify-center">
+              <motion.div
+                animate={{ scale: [1, 1.6, 1], opacity: [0.25, 0.5, 0.25] }}
+                transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
+                className="absolute inset-0 rounded-full border border-primary/40"
+              />
+              <motion.div
+                animate={{ scale: [1, 2, 1], opacity: [0.15, 0.3, 0.15] }}
+                transition={{ repeat: Infinity, duration: 2.2, delay: 0.6, ease: "easeInOut" }}
+                className="absolute inset-0 rounded-full border border-blue-500/30"
+              />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/20 to-blue-600/20 blur-xl animate-pulse" />
+              <motion.div
+                animate={{ y: [0, -4, 0] }}
+                transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+              >
+                <MapPin className="w-14 h-14 text-primary relative z-10 drop-shadow-[0_0_12px_rgba(168,85,247,0.8)]" />
+              </motion.div>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="space-y-4 mb-10"
+            >
+              <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-white/70">
+                Allow Location Access
+              </h2>
+              <p className="text-white/60 leading-relaxed text-base">
+                MoodTune uses your <strong className="text-white/80">device's exact location</strong> to fetch live local weather — so your playlist matches the sky above you right now.
+              </p>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-white/50">
+                <Navigation className="w-3 h-3" />
+                Your coordinates stay on your device and are never stored
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.5 }}
+              className="w-full space-y-3"
+            >
+              <Button
+                onClick={handleAllowAndAnalyze}
+                disabled={locationPending}
+                className="w-full py-5 text-base rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold shadow-[0_0_30px_rgba(168,85,247,0.4)] transition-all hover:scale-[1.02] disabled:opacity-60 disabled:scale-100"
+                data-testid="button-allow-location"
+              >
+                {locationPending ? (
+                  <span className="flex items-center gap-2">
+                    <motion.span
+                      animate={{ rotate: 360 }}
+                      transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                      className="inline-block w-4 h-4 border-2 border-white/40 border-t-white rounded-full"
+                    />
+                    Waiting for permission…
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2 justify-center">
+                    <MapPin className="w-4 h-4" />
+                    Allow Location &amp; Continue
+                  </span>
+                )}
+              </Button>
+
+              <button
+                onClick={handleSkip}
+                disabled={locationPending}
+                data-testid="button-skip-location"
+                className="w-full py-3 text-sm text-white/40 hover:text-white/70 transition-colors disabled:opacity-30"
+              >
+                Skip — use time of day only
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* ── ANALYZING ── */}
         {state === "analyzing" && (
           <motion.div
             key="analyzing"
@@ -155,6 +283,7 @@ export default function Home() {
           </motion.div>
         )}
 
+        {/* ── RESULT ── */}
         {state === "result" && result && (
           <motion.div
             key="result"
@@ -277,6 +406,7 @@ export default function Home() {
             </motion.div>
           </motion.div>
         )}
+
       </AnimatePresence>
     </div>
   );
