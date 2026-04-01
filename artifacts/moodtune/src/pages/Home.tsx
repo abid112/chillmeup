@@ -74,9 +74,9 @@ export default function Home() {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(168,85,247,0.4)] border border-primary/30"
+                className="mx-auto mb-6"
               >
-                <Sparkles className="w-8 h-8 text-primary" />
+                <img src="/logo.png" alt="Chill Me Up! logo" className="w-20 h-20 drop-shadow-[0_0_20px_rgba(168,85,247,0.6)]" />
               </motion.div>
               <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white to-white/60">Find the Perfect Music for Your Mood</h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-lg mx-auto">
