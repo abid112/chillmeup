@@ -195,7 +195,7 @@ export default function Home() {
               <Button
                 onClick={handleAllowAndAnalyze}
                 disabled={locationPending}
-                className="w-full py-5 text-base rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold shadow-[0_0_30px_rgba(168,85,247,0.4)] transition-all hover:scale-[1.02] disabled:opacity-60 disabled:scale-100"
+                className="w-full py-3.5 text-base rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold shadow-[0_0_30px_rgba(168,85,247,0.4)] transition-all hover:scale-[1.02] disabled:opacity-60 disabled:scale-100"
                 data-testid="button-allow-location"
               >
                 {locationPending ? (
