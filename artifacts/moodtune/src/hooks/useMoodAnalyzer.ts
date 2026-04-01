@@ -14,74 +14,82 @@ export interface MoodResult {
 }
 
 // ---------------------------------------------------------------------------
-// Verified live Spotify editorial playlist IDs.
+// Spotify editorial playlist IDs — expanded pool for variety.
 // Format: open.spotify.com/playlist/{id}
 // ---------------------------------------------------------------------------
 const P = {
-  rainyDay:      { id: '37i9dQZF1DXbvABJXBIyiY', name: 'Rainy Day' },
-  peacefulPiano: { id: '37i9dQZF1DX4sWSpwq3LiO', name: 'Peaceful Piano' },
-  happyHits:     { id: '37i9dQZF1DXdPec7aLTmlC', name: 'Happy Hits!' },
-  rockClassics:  { id: '37i9dQZF1DWXRqgorJj26U', name: 'Rock Classics' },
-  topHits:       { id: '37i9dQZF1DXcBWIGoYBM5M', name: "Today's Top Hits" },
-  deepFocus:     { id: '37i9dQZF1DWZeKCadgRdKQ', name: 'Deep Focus' },
+  rainyDay:         { id: '37i9dQZF1DXbvABJXBIyiY', name: 'Rainy Day' },
+  peacefulPiano:    { id: '37i9dQZF1DX4sWSpwq3LiO', name: 'Peaceful Piano' },
+  happyHits:        { id: '37i9dQZF1DXdPec7aLTmlC', name: 'Happy Hits!' },
+  rockClassics:     { id: '37i9dQZF1DWXRqgorJj26U', name: 'Rock Classics' },
+  topHits:          { id: '37i9dQZF1DXcBWIGoYBM5M', name: "Today's Top Hits" },
+  deepFocus:        { id: '37i9dQZF1DWZeKCadgRdKQ', name: 'Deep Focus' },
+  moodBooster:      { id: '37i9dQZF1DXe5W6diBIV3E', name: 'Mood Booster' },
+  afternoonAco:     { id: '37i9dQZF1DX2sk7MV3rcaX', name: 'Afternoon Acoustic' },
+  softPop:          { id: '37i9dQZF1DX1clOuib1KtQ', name: 'Soft Pop Hits' },
+  mint:             { id: '37i9dQZF1DX4dyzvuaRJ0n', name: 'mint' },
+  allOut2010s:      { id: '37i9dQZF1DX5Ejj0EkURtP', name: 'All Out 2010s' },
+  jazzVibes:        { id: '37i9dQZF1DXbITWG1ZJKYt', name: 'Jazz Vibes' },
+  vocalChills:      { id: '37i9dQZF1DX9oc9LtHUgJi', name: 'Vocal Chills' },
+  sleepyHollow:     { id: '37i9dQZF1DWZd79rJ6a7lp', name: 'Sleep' },
+  epicConcentration:{ id: '37i9dQZF1DX9sIqqvKsjEL', name: 'Epic Concentration' },
 } as const;
 
 type PlaylistKey = keyof typeof P;
 
-// Each mood maps to a pool of playlists per energy level.
-// A random one is picked at analysis time → variety on every run.
+// Each mood → pool per energy level. Random pick each run → lots of variety.
 // Keys must match: timeMod.toLowerCase().replace(' ', '')
 type EnergyPool = { Low: PlaylistKey[]; Medium: PlaylistKey[]; High: PlaylistKey[] };
 const MOOD_MAP: Record<string, EnergyPool> = {
   rain: {
-    Low:    ['peacefulPiano', 'deepFocus'],
-    Medium: ['rainyDay', 'peacefulPiano'],
-    High:   ['rainyDay', 'topHits'],
+    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'sleepyHollow', 'vocalChills'],
+    Medium: ['rainyDay', 'peacefulPiano', 'jazzVibes', 'afternoonAco', 'vocalChills'],
+    High:   ['rainyDay', 'topHits', 'moodBooster', 'happyHits', 'softPop'],
   },
   sunnyDay: {
-    Low:    ['peacefulPiano', 'deepFocus'],
-    Medium: ['happyHits', 'topHits'],
-    High:   ['happyHits', 'topHits'],
+    Low:    ['peacefulPiano', 'deepFocus', 'afternoonAco', 'softPop', 'jazzVibes'],
+    Medium: ['happyHits', 'topHits', 'moodBooster', 'mint', 'softPop'],
+    High:   ['happyHits', 'topHits', 'moodBooster', 'mint', 'allOut2010s'],
   },
   clearNight: {
-    Low:    ['peacefulPiano', 'deepFocus'],
-    Medium: ['peacefulPiano', 'happyHits'],
-    High:   ['happyHits', 'topHits'],
+    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'vocalChills', 'sleepyHollow'],
+    Medium: ['peacefulPiano', 'jazzVibes', 'vocalChills', 'softPop', 'afternoonAco'],
+    High:   ['happyHits', 'topHits', 'moodBooster', 'allOut2010s', 'mint'],
   },
   cloudy: {
-    Low:    ['peacefulPiano', 'deepFocus'],
-    Medium: ['rainyDay', 'peacefulPiano'],
-    High:   ['happyHits', 'topHits'],
+    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'vocalChills', 'afternoonAco'],
+    Medium: ['rainyDay', 'peacefulPiano', 'jazzVibes', 'deepFocus', 'softPop'],
+    High:   ['happyHits', 'topHits', 'moodBooster', 'mint', 'allOut2010s'],
   },
   snow: {
-    Low:    ['peacefulPiano', 'rainyDay'],
-    Medium: ['peacefulPiano', 'deepFocus'],
-    High:   ['happyHits', 'topHits'],
+    Low:    ['peacefulPiano', 'rainyDay', 'jazzVibes', 'sleepyHollow', 'deepFocus'],
+    Medium: ['peacefulPiano', 'afternoonAco', 'jazzVibes', 'vocalChills', 'softPop'],
+    High:   ['happyHits', 'topHits', 'moodBooster', 'allOut2010s', 'mint'],
   },
   thunder: {
-    Low:    ['rockClassics', 'deepFocus'],
-    Medium: ['rockClassics'],
-    High:   ['rockClassics', 'topHits'],
+    Low:    ['rockClassics', 'deepFocus', 'epicConcentration', 'jazzVibes', 'vocalChills'],
+    Medium: ['rockClassics', 'epicConcentration', 'topHits', 'allOut2010s', 'happyHits'],
+    High:   ['rockClassics', 'topHits', 'epicConcentration', 'allOut2010s', 'moodBooster'],
   },
   morning: {
-    Low:    ['peacefulPiano', 'deepFocus'],
-    Medium: ['happyHits', 'topHits'],
-    High:   ['happyHits', 'topHits'],
+    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'afternoonAco', 'vocalChills'],
+    Medium: ['happyHits', 'topHits', 'moodBooster', 'mint', 'softPop'],
+    High:   ['happyHits', 'topHits', 'moodBooster', 'allOut2010s', 'mint'],
   },
   afternoon: {
-    Low:    ['deepFocus', 'peacefulPiano'],
-    Medium: ['happyHits', 'topHits'],
-    High:   ['topHits', 'happyHits'],
+    Low:    ['deepFocus', 'peacefulPiano', 'afternoonAco', 'jazzVibes', 'softPop'],
+    Medium: ['happyHits', 'topHits', 'moodBooster', 'mint', 'allOut2010s'],
+    High:   ['topHits', 'happyHits', 'moodBooster', 'allOut2010s', 'mint'],
   },
   evening: {
-    Low:    ['peacefulPiano', 'deepFocus'],
-    Medium: ['happyHits', 'peacefulPiano'],
-    High:   ['happyHits', 'topHits'],
+    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'vocalChills', 'afternoonAco'],
+    Medium: ['happyHits', 'jazzVibes', 'vocalChills', 'softPop', 'mint'],
+    High:   ['happyHits', 'topHits', 'moodBooster', 'allOut2010s', 'mint'],
   },
   latenight: {
-    Low:    ['peacefulPiano', 'deepFocus'],
-    Medium: ['rainyDay', 'peacefulPiano'],
-    High:   ['topHits', 'happyHits'],
+    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'sleepyHollow', 'vocalChills'],
+    Medium: ['rainyDay', 'jazzVibes', 'vocalChills', 'deepFocus', 'softPop'],
+    High:   ['topHits', 'happyHits', 'moodBooster', 'allOut2010s', 'mint'],
   },
 };
 
