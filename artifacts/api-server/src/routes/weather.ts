@@ -25,8 +25,19 @@ router.get("/weather", async (req, res) => {
       res.status(response.status).json({ error: "Weather API error" });
       return;
     }
-    const data = await response.json();
-    res.json(data);
+    const data = await response.json() as {
+      weather: Array<{ main: string; description: string }>;
+      main: { temp: number };
+      name: string;
+      sys: { country: string };
+    };
+
+    res.json({
+      condition: data.weather?.[0]?.main ?? "Clear",
+      description: data.weather?.[0]?.description ?? "",
+      temp: Math.round(data.main?.temp ?? 20),
+      location: data.name ? `${data.name}, ${data.sys?.country ?? ""}` : null,
+    });
   } catch (err) {
     req.log.error({ err }, "Failed to fetch weather");
     res.status(500).json({ error: "Failed to fetch weather" });
