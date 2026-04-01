@@ -1,0 +1,185 @@
+Create a fun experimental web app called MoodTune that suggests music playlists based on simulated mood analysis.
+
+The goal of this project is entertainment. The app should pretend to analyze the user's mood using multiple factors and then recommend a Spotify playlist.
+
+Core Idea
+
+When the user opens the app and clicks “Boost My Mood”, the app should start an analysis animation process that simulates analyzing several factors about the user.
+
+The analysis should show a progress system like:
+
+Detecting your location… 12%
+Analyzing local weather conditions… 28%
+Scanning browsing patterns… 41%
+Estimating your current mood… 63%
+Checking time-of-day energy levels… 75%
+Matching music vibes… 90%
+Generating playlist… 100%
+
+This is mostly visual simulation for fun, not actual deep analysis.
+
+Data Factors to Use
+
+The playlist recommendation should be based on these factors:
+
+1. Weather (Real API)
+
+Use a weather API such as OpenWeatherMap.
+
+Examples:
+
+Rain → rainy / chill songs
+Sunny → happy / upbeat songs
+Cloudy → calm / indie songs
+Night → relaxing / lo-fi songs
+2. Time of Day
+
+Adjust recommendations based on current time.
+
+Examples:
+Morning → energetic music
+Afternoon → focus / productivity
+Evening → relaxing
+Late night → lo-fi / ambient
+
+3. Location
+
+Use the browser geolocation API.
+
+Use the city name to influence playlist vibes:
+Example:
+
+Rain in London → rainy acoustic
+Sunny in California → summer vibes
+4. Optional User Inputs
+
+Ask the user a few optional details:
+
+Age range
+Gender (optional)
+Current energy level (Low / Medium / High)
+
+These inputs help personalize the playlist.
+
+5. Random Mood Factor
+
+Add a random factor so each result feels unique.
+
+Example moods:
+
+Chill
+Nostalgic
+Focus
+Party
+Romantic
+Adventure
+Deep thinking
+Spotify Integration
+
+The app should search Spotify playlists using the Spotify API.
+
+Example queries:
+
+"rainy day songs"
+"summer vibes"
+"lofi focus"
+"late night chill"
+"happy pop playlist"
+
+Then display:
+
+Playlist cover
+Playlist name
+Short description
+Button to open in Spotify
+
+If Spotify API setup is difficult, fallback to Spotify search links.
+
+Example:
+
+https://open.spotify.com/search/rainy%20day%20playlist
+
+UI / UX Requirements
+
+Create a modern minimal UI.
+
+Sections:
+
+Landing Screen
+
+Title:
+"Find the Perfect Song for Your Mood"
+
+Button:
+"Boost My Mood"
+
+Analysis Screen
+
+Show animated progress bars.
+
+Examples:
+
+Analyzing your location
+Analyzing weather patterns
+Scanning browsing vibes (simulation)
+Estimating emotional state
+Matching music energy
+
+Each step should increase the progress bar.
+
+Total duration: ~5–7 seconds.
+
+Result Screen
+
+Show:
+
+Mood detected: Calm Rainy Reflection
+
+Weather: Rainy 🌧
+Time: Evening 🌙
+
+Suggested Playlist:
+
+[Playlist Card]
+
+Cover Image
+Playlist Title
+Open on Spotify Button
+
+Tech Stack
+
+Use:
+
+Frontend
+
+HTML
+CSS
+Vanilla JavaScript
+
+Optional improvements:
+
+Tailwind CSS
+Framer motion style animations
+
+APIs
+
+OpenWeatherMap API
+Spotify API (optional)
+Extra Fun Features
+
+Add fun fake analysis messages like:
+
+"Scanning emotional signals…"
+"Matching your vibe with global music trends…"
+"Detecting hidden nostalgia levels…"
+
+Goal
+
+The experience should feel magical and fun, making users feel like the app truly understands their mood and gives the perfect playlist.
+
+Focus on:
+
+Good animations
+Smooth UX
+Fun analysis simulation
+Real weather + time logic
