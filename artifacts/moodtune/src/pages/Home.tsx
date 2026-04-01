@@ -128,7 +128,10 @@ export default function Home() {
                 className="w-full py-6 text-lg rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold shadow-[0_0_30px_rgba(168,85,247,0.4)] transition-all hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(168,85,247,0.6)]"
                 data-testid="button-start"
               >
-                Chill Me Up!
+                <span className="flex items-center gap-2 justify-center">
+                  <Sparkles className="w-5 h-5" />
+                  Chill Me Up!
+                </span>
               </Button>
             </div>
           </motion.div>
