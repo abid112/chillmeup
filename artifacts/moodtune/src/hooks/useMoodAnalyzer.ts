@@ -176,12 +176,12 @@ export function useMoodAnalyzer() {
 
     const messageInterval = setInterval(() => {
       setFakeMessage(FAKE_MESSAGES[Math.floor(Math.random() * FAKE_MESSAGES.length)]);
-    }, 1400);
+    }, 2600);
 
     for (const step of ANALYSIS_STEPS) {
       setStepText(step.text);
       setProgress(step.progress);
-      await new Promise(r => setTimeout(r, 1600 + Math.random() * 600));
+      await new Promise(r => setTimeout(r, 2800 + Math.random() * 1000));
     }
 
     clearInterval(messageInterval);
