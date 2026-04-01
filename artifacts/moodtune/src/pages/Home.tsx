@@ -76,7 +76,7 @@ export default function Home() {
                 transition={{ delay: 0.2, duration: 0.5 }}
                 className="mx-auto mb-6"
               >
-                <img src="/logo.png" alt="Chill Me Up! logo" className="w-20 h-20 drop-shadow-[0_0_20px_rgba(168,85,247,0.6)]" />
+                <img src="/logo.png" alt="Chill Me Up! logo" className="w-20 h-20 block mx-auto drop-shadow-[0_0_20px_rgba(168,85,247,0.6)]" />
               </motion.div>
               <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white to-white/60">Find the Perfect Music for Your Mood</h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-lg mx-auto">
