@@ -121,11 +121,11 @@ export function useMoodAnalyzer() {
       setFakeMessage(FAKE_MESSAGES[Math.floor(Math.random() * FAKE_MESSAGES.length)]);
     }, 1400);
 
-    // Simulate steps with timing
+    // Simulate steps with timing — slow enough to read each one comfortably
     for (const step of ANALYSIS_STEPS) {
       setStepText(step.text);
       setProgress(step.progress);
-      await new Promise(r => setTimeout(r, 700 + Math.random() * 400));
+      await new Promise(r => setTimeout(r, 1600 + Math.random() * 600));
     }
 
     clearInterval(messageInterval);
