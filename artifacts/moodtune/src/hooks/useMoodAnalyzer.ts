@@ -9,9 +9,42 @@ export interface MoodResult {
   timeText: string;
   playlistName: string;
   playlistDescription: string;
-  searchQuery: string;
+  playlistId: string;
   detectedEnergy: EnergyLevel;
 }
+
+// ---------------------------------------------------------------------------
+// Curated Spotify editorial playlist IDs (Spotify-owned, always public)
+// Format: open.spotify.com/playlist/{id}
+// ---------------------------------------------------------------------------
+const P = {
+  rainyDay:      { id: '37i9dQZF1DXbvABJXBIyiY', name: 'Rainy Day' },
+  peacefulPiano: { id: '37i9dQZF1DX4sWSpwq3LiO', name: 'Peaceful Piano' },
+  lofiBeat:      { id: '37i9dQZF1DWWv7o6mJSWv7', name: 'Lo-Fi Beats' },
+  chillHits:     { id: '37i9dQZF1DX0SM0LYsmbMT', name: 'Chill Hits' },
+  happyHits:     { id: '37i9dQZF1DXdPec7aLTmlC', name: 'Happy Hits!' },
+  feelinGood:    { id: '37i9dQZF1DX9XIFQuFvzM4', name: 'Feelin\' Good' },
+  rockClassics:  { id: '37i9dQZF1DWXRqgorJj26U', name: 'Rock Classics' },
+  acousticHits:  { id: '37i9dQZF1DX5trt9riIlJP', name: 'Acoustic Hits' },
+} as const;
+
+type PlaylistKey = keyof typeof P;
+
+// mood key → [Low, Medium, High] playlist
+const MOOD_MAP: Record<string, [PlaylistKey, PlaylistKey, PlaylistKey]> = {
+  rain:       ['rainyDay',      'rainyDay',      'chillHits'],
+  sunnyDay:   ['peacefulPiano', 'happyHits',     'feelinGood'],
+  clearNight: ['lofiBeat',      'chillHits',     'chillHits'],
+  cloudy:     ['lofiBeat',      'chillHits',     'happyHits'],
+  snow:       ['peacefulPiano', 'acousticHits',  'happyHits'],
+  thunder:    ['chillHits',     'rockClassics',  'rockClassics'],
+  morning:    ['lofiBeat',      'happyHits',     'feelinGood'],
+  afternoon:  ['chillHits',     'happyHits',     'feelinGood'],
+  evening:    ['lofiBeat',      'chillHits',     'chillHits'],
+  lateNight:  ['lofiBeat',      'lofiBeat',      'chillHits'],
+};
+
+// ---------------------------------------------------------------------------
 
 const FAKE_MESSAGES = [
   "Scanning emotional signals…",
@@ -34,7 +67,7 @@ const ANALYSIS_STEPS = [
   { progress: 63, text: "Estimating your current mood…" },
   { progress: 75, text: "Checking time-of-day energy levels…" },
   { progress: 90, text: "Matching music vibes…" },
-  { progress: 100, text: "Generating playlist…" },
+  { progress: 100, text: "Curating your playlist…" },
 ];
 
 function detectEnergyFromBrowser(): EnergyLevel {
@@ -91,13 +124,21 @@ async function fetchWeather(lat: number, lon: number): Promise<{ condition: stri
   return { condition: 'Clear', weatherText: 'Weather unavailable' };
 }
 
+function resolvePlaylist(
+  moodKey: string,
+  energy: EnergyLevel,
+): { id: string; name: string } {
+  const keys = MOOD_MAP[moodKey] ?? MOOD_MAP['afternoon'];
+  const idx = energy === 'Low' ? 0 : energy === 'Medium' ? 1 : 2;
+  return P[keys[idx]];
+}
+
 export function useMoodAnalyzer() {
   const [state, setState] = useState<MoodState>('idle');
   const [progress, setProgress] = useState(0);
   const [stepText, setStepText] = useState('');
   const [fakeMessage, setFakeMessage] = useState('');
   const [result, setResult] = useState<MoodResult | null>(null);
-  // Stored device coords from the permission step
   const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null);
 
   const reset = useCallback(() => {
@@ -109,50 +150,34 @@ export function useMoodAnalyzer() {
     setCoords(null);
   }, []);
 
-  // Step 1: user clicks "Boost My Mood" → go to location permission screen
   const requestLocation = useCallback(() => {
     setState('requesting-location');
   }, []);
 
-  // Step 2a: user clicks Allow on location screen → trigger browser geolocation
   const grantLocation = useCallback(async (): Promise<void> => {
     return new Promise((resolve) => {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude });
-          resolve();
-        },
-        () => {
-          // Denied or failed — proceed without coords
-          setCoords(null);
-          resolve();
-        },
+        (pos) => { setCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude }); resolve(); },
+        () => { setCoords(null); resolve(); },
         { timeout: 30000, enableHighAccuracy: false },
       );
     });
   }, []);
 
-  // Step 2b: user skips location
-  const skipLocation = useCallback(() => {
-    setCoords(null);
-  }, []);
+  const skipLocation = useCallback(() => { setCoords(null); }, []);
 
-  // Step 3: run the analysis animation + fetch weather using stored coords
   const analyze = useCallback(async (resolvedCoords: { lat: number; lon: number } | null) => {
     setState('analyzing');
     setProgress(0);
 
-    // Start weather fetch in background using device coords
     const weatherPromise = resolvedCoords
       ? fetchWeather(resolvedCoords.lat, resolvedCoords.lon)
       : Promise.resolve({ condition: 'Clear', weatherText: 'Weather unavailable' });
 
-    // Fake message loop
     const messageInterval = setInterval(() => {
       setFakeMessage(FAKE_MESSAGES[Math.floor(Math.random() * FAKE_MESSAGES.length)]);
     }, 1400);
 
-    // Animate steps
     for (const step of ANALYSIS_STEPS) {
       setStepText(step.text);
       setProgress(step.progress);
@@ -172,26 +197,28 @@ export function useMoodAnalyzer() {
     else if (hour >= 17 && hour < 21) { timeMod = 'Evening'; timeText = 'Evening 🌙'; }
     else { timeMod = 'Late Night'; timeText = 'Late Night 🌌'; }
 
+    // Determine mood key from weather + time
+    let moodKey = timeMod.toLowerCase().replace(' ', '');  // morning|afternoon|evening|latenight
     let moodLabel = `${timeMod} Flow`;
-    let search = `${timeMod.toLowerCase()} flow playlist`;
-    let playlistName = `${timeMod} Flow`;
 
     if (weatherCondition.includes('Rain') || weatherCondition.includes('Drizzle')) {
-      moodLabel = 'Rainy Day Reflection'; search = 'rainy day acoustic playlist'; playlistName = 'Rainy Day Acoustic';
-    } else if (weatherCondition.includes('Clear') && (timeMod === 'Morning' || timeMod === 'Afternoon')) {
-      moodLabel = 'Sunny Good Vibes'; search = 'happy upbeat summer playlist'; playlistName = 'Sunny Summer Vibes';
-    } else if (weatherCondition.includes('Clear') && (timeMod === 'Evening' || timeMod === 'Late Night')) {
-      moodLabel = 'Late Night Chill'; search = 'late night chill playlist'; playlistName = 'Late Night Chill';
-    } else if (weatherCondition.includes('Cloud')) {
-      moodLabel = 'Cloudy Indie Thoughts'; search = 'indie chill cloudy day playlist'; playlistName = 'Cloudy Indie';
-    } else if (weatherCondition.includes('Snow')) {
-      moodLabel = 'Winter Cozy'; search = 'cozy winter ambient playlist'; playlistName = 'Winter Cozy';
+      moodKey = 'rain'; moodLabel = 'Rainy Day Reflection';
     } else if (weatherCondition.includes('Thunder')) {
-      moodLabel = 'Storm Energy'; search = 'epic dramatic playlist'; playlistName = 'Storm Energy';
+      moodKey = 'thunder'; moodLabel = 'Storm Energy';
+    } else if (weatherCondition.includes('Snow')) {
+      moodKey = 'snow'; moodLabel = 'Winter Cozy';
+    } else if (weatherCondition.includes('Cloud') || weatherCondition.includes('Fog')) {
+      moodKey = 'cloudy'; moodLabel = 'Cloudy Indie Thoughts';
+    } else if (weatherCondition.includes('Clear') && (timeMod === 'Morning' || timeMod === 'Afternoon')) {
+      moodKey = 'sunnyDay'; moodLabel = 'Sunny Good Vibes';
+    } else if (weatherCondition.includes('Clear') && (timeMod === 'Evening' || timeMod === 'Late Night')) {
+      moodKey = 'clearNight'; moodLabel = 'Clear Night Chill';
     }
 
-    if (energy === 'Low') { search += ' chill ambient lo-fi'; moodLabel = 'Calm ' + moodLabel; }
-    else if (energy === 'High') { search += ' upbeat party dance'; moodLabel = 'Energetic ' + moodLabel; }
+    if (energy === 'Low') moodLabel = 'Calm ' + moodLabel;
+    else if (energy === 'High') moodLabel = 'Energetic ' + moodLabel;
+
+    const { id: playlistId, name: playlistName } = resolvePlaylist(moodKey, energy);
 
     const randomMoods = ['Chill', 'Nostalgic', 'Focus', 'Party', 'Romantic', 'Adventure', 'Deep Thinking'];
     const randomMood = randomMoods[Math.floor(Math.random() * randomMoods.length)];
@@ -201,8 +228,8 @@ export function useMoodAnalyzer() {
       weatherText,
       timeText,
       playlistName,
-      playlistDescription: `A curated selection of tracks matching your ${energy.toLowerCase()} energy and the ${timeText.toLowerCase()} atmosphere.`,
-      searchQuery: encodeURIComponent(search),
+      playlistDescription: `A curated Spotify playlist for your ${energy.toLowerCase()} energy and ${timeText.toLowerCase()} mood.`,
+      playlistId,
       detectedEnergy: energy,
     });
     setState('result');

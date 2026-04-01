@@ -375,7 +375,7 @@ export default function Home() {
                   </p>
                   <div className="pt-4">
                     <a
-                      href={`https://open.spotify.com/search/${result.searchQuery}`}
+                      href={`https://open.spotify.com/playlist/${result.playlistId}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       data-testid="link-spotify"
