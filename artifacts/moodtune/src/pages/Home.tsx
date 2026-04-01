@@ -78,11 +78,9 @@ export default function Home() {
               >
                 <Sparkles className="w-8 h-8 text-primary" />
               </motion.div>
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white to-white/60">
-                Chill Me Up!
-              </h1>
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white to-white/60">Find the Perfect Music for Your Mood</h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-lg mx-auto">
-                Find the perfect song for your mood — powered by your location, the weather, and the time of day.
+                We'll analyze your vibe and find your perfect playlist.
               </p>
             </div>
 
@@ -130,7 +128,7 @@ export default function Home() {
                 className="w-full py-6 text-lg rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold shadow-[0_0_30px_rgba(168,85,247,0.4)] transition-all hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(168,85,247,0.6)]"
                 data-testid="button-start"
               >
-                Boost My Mood
+                Chill Me Up!
               </Button>
             </div>
           </motion.div>
