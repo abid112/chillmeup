@@ -15,7 +15,6 @@ Chill Me Up! is a single-page web app that silently reads real-world signals (yo
 - **Time-of-day awareness** — detects morning, afternoon, evening, or late-night energy
 - **Browser activity signals** — estimates engagement level from scroll depth, time on page, and tab focus state
 - **Animated scanning experience** — 8-step progress flow with smooth Framer Motion animations
-- **23 verified Spotify playlists** — every playlist ID live-tested against Spotify's oEmbed API; no dead links
 - **Real playlist artwork** — fetches official Spotify cover art via a server-side proxy (no Spotify auth needed)
 - **Optional location** — users can skip geolocation; app gracefully falls back to time-of-day + browser signals only
 - **Age & gender context** — optional dropdowns that can refine the mood analysis
@@ -63,7 +62,7 @@ Map signals ──► Mood key (e.g. "rainy", "morning", "latenight")
            ──► Energy level (Low / Medium / High)
       │
       ▼
-Look up MOOD_MAP ──► Pick random playlist from matching pool
+Match mood + energy ──► Recommend a Spotify playlist
       │
       ▼
 Fetch real cover art via /api/playlist-image proxy
@@ -106,7 +105,7 @@ Browser signals are scored 0–100 and mapped to:
 │   │   │   └── logo.png            # App logo / favicon
 │   │   └── src/
 │   │       ├── hooks/
-│   │       │   └── useMoodAnalyzer.ts  # Core mood logic, playlist pool, browser signals
+│   │       │   └── useMoodAnalyzer.ts  # Core mood logic and browser signals
 │   │       ├── pages/
 │   │       │   └── Home.tsx            # Full single-page UI
 │   │       └── index.css               # Global styles (Tailwind base)
@@ -156,38 +155,6 @@ Open `http://localhost:5173` in your browser.
 
 ---
 
-## 🎧 Verified Playlist Pool
-
-All 23 playlists are live-verified against Spotify's oEmbed API. No dead links.
-
-| Key | Spotify Name | Vibe |
-|---|---|---|
-| peacefulPiano | Peaceful Piano | Calm / Focus |
-| deepFocus | Deep Focus | Calm / Focus |
-| sleep | Sleep | Calm / Sleep |
-| jazzVibes | Jazz Classics | Calm / Jazz |
-| chillHits | Chill Hits | Chill |
-| chillVibes | Mood Booster | Chill / Happy |
-| morningMood | Peaceful Guitar | Morning |
-| loungeVibes | Yoga & Meditation | Lounge |
-| rainyDay | Rainy Day | Rain |
-| indiePop | All New Indie | Indie / Rain |
-| vivaLatino | Reggae Classics | Sunny |
-| happyHits | Happy Hits! | Happy |
-| topHits | Today's Top Hits | Pop |
-| mint | mint | Pop / Fresh |
-| popRising | Pop Rising | Pop |
-| rockClassics | Rock Classics | Rock |
-| powerWorkout | Beast Mode | Workout / High energy |
-| cardio | Gym Hits | Workout / High energy |
-| danceHits | Rock Party | Dance / Party |
-| dancePop | All Out 60s | Throwback |
-| allOut90s | All Out 90s | Throwback |
-| allOut2010s | All Out 2010s | Throwback |
-| rapCaviar | RapCaviar | Hip-hop |
-
----
-
 ## 🌐 API Endpoints
 
 ### `GET /api/health`
@@ -203,14 +170,7 @@ Proxies Spotify's public oEmbed endpoint. Returns `{ imageUrl: string | null }`.
 
 ## 🤝 Contributing
 
-Contributions are welcome! If you want to add more verified playlists:
-
-1. Test the playlist ID against `https://open.spotify.com/oembed?url=https://open.spotify.com/playlist/{ID}`
-2. Confirm it returns `200` with a `thumbnail_url`
-3. Add it to the `P` object in `useMoodAnalyzer.ts` with the correct name from the oEmbed `title` field
-4. Add it to the relevant mood pools in `MOOD_MAP`
-
-Please do **not** add unverified playlist IDs — they will return broken links for users.
+Contributions are welcome! Feel free to open issues or pull requests for bug fixes, UI improvements, or new features.
 
 ---
 
