@@ -57,7 +57,6 @@ export default function Home() {
         <div className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-blue-600/10 blur-[100px] mix-blend-screen" />
         <div className="absolute top-[40%] left-[60%] w-[40vw] h-[40vw] rounded-full bg-purple-600/10 blur-[90px] mix-blend-screen" />
       </div>
-
       <AnimatePresence mode="wait">
 
         {/* ── LANDING ── */}
@@ -79,9 +78,7 @@ export default function Home() {
               >
                 <Sparkles className="w-8 h-8 text-primary" />
               </motion.div>
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white to-white/60">
-                Find the Perfect Song for Your Mood
-              </h1>
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white to-white/60">Find the Perfect Music for Your Mood</h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-lg mx-auto">
                 We'll analyze your vibe and find your perfect playlist.
               </p>
