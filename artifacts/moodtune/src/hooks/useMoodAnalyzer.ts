@@ -14,7 +14,7 @@ export interface MoodResult {
 }
 
 // ---------------------------------------------------------------------------
-// Only IDs verified to be live Spotify editorial playlists.
+// Verified live Spotify editorial playlist IDs.
 // Format: open.spotify.com/playlist/{id}
 // ---------------------------------------------------------------------------
 const P = {
@@ -22,23 +22,67 @@ const P = {
   peacefulPiano: { id: '37i9dQZF1DX4sWSpwq3LiO', name: 'Peaceful Piano' },
   happyHits:     { id: '37i9dQZF1DXdPec7aLTmlC', name: 'Happy Hits!' },
   rockClassics:  { id: '37i9dQZF1DWXRqgorJj26U', name: 'Rock Classics' },
+  topHits:       { id: '37i9dQZF1DXcBWIGoYBM5M', name: "Today's Top Hits" },
+  deepFocus:     { id: '37i9dQZF1DWZeKCadgRdKQ', name: 'Deep Focus' },
 } as const;
 
 type PlaylistKey = keyof typeof P;
 
-// mood key → [Low energy, Medium energy, High energy]
-// Keys must match the output of: timeMod.toLowerCase().replace(' ', '')
-const MOOD_MAP: Record<string, [PlaylistKey, PlaylistKey, PlaylistKey]> = {
-  rain:       ['peacefulPiano', 'rainyDay',      'rainyDay'],
-  sunnyDay:   ['peacefulPiano', 'happyHits',     'happyHits'],
-  clearNight: ['peacefulPiano', 'peacefulPiano', 'happyHits'],
-  cloudy:     ['peacefulPiano', 'rainyDay',      'happyHits'],
-  snow:       ['peacefulPiano', 'peacefulPiano', 'happyHits'],
-  thunder:    ['rockClassics',  'rockClassics',  'rockClassics'],
-  morning:    ['peacefulPiano', 'happyHits',     'happyHits'],
-  afternoon:  ['peacefulPiano', 'happyHits',     'happyHits'],
-  evening:    ['peacefulPiano', 'peacefulPiano', 'happyHits'],
-  latenight:  ['peacefulPiano', 'peacefulPiano', 'happyHits'],
+// Each mood maps to a pool of playlists per energy level.
+// A random one is picked at analysis time → variety on every run.
+// Keys must match: timeMod.toLowerCase().replace(' ', '')
+type EnergyPool = { Low: PlaylistKey[]; Medium: PlaylistKey[]; High: PlaylistKey[] };
+const MOOD_MAP: Record<string, EnergyPool> = {
+  rain: {
+    Low:    ['peacefulPiano', 'deepFocus'],
+    Medium: ['rainyDay', 'peacefulPiano'],
+    High:   ['rainyDay', 'topHits'],
+  },
+  sunnyDay: {
+    Low:    ['peacefulPiano', 'deepFocus'],
+    Medium: ['happyHits', 'topHits'],
+    High:   ['happyHits', 'topHits'],
+  },
+  clearNight: {
+    Low:    ['peacefulPiano', 'deepFocus'],
+    Medium: ['peacefulPiano', 'happyHits'],
+    High:   ['happyHits', 'topHits'],
+  },
+  cloudy: {
+    Low:    ['peacefulPiano', 'deepFocus'],
+    Medium: ['rainyDay', 'peacefulPiano'],
+    High:   ['happyHits', 'topHits'],
+  },
+  snow: {
+    Low:    ['peacefulPiano', 'rainyDay'],
+    Medium: ['peacefulPiano', 'deepFocus'],
+    High:   ['happyHits', 'topHits'],
+  },
+  thunder: {
+    Low:    ['rockClassics', 'deepFocus'],
+    Medium: ['rockClassics'],
+    High:   ['rockClassics', 'topHits'],
+  },
+  morning: {
+    Low:    ['peacefulPiano', 'deepFocus'],
+    Medium: ['happyHits', 'topHits'],
+    High:   ['happyHits', 'topHits'],
+  },
+  afternoon: {
+    Low:    ['deepFocus', 'peacefulPiano'],
+    Medium: ['happyHits', 'topHits'],
+    High:   ['topHits', 'happyHits'],
+  },
+  evening: {
+    Low:    ['peacefulPiano', 'deepFocus'],
+    Medium: ['happyHits', 'peacefulPiano'],
+    High:   ['happyHits', 'topHits'],
+  },
+  latenight: {
+    Low:    ['peacefulPiano', 'deepFocus'],
+    Medium: ['rainyDay', 'peacefulPiano'],
+    High:   ['topHits', 'happyHits'],
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -125,9 +169,9 @@ function resolvePlaylist(
   moodKey: string,
   energy: EnergyLevel,
 ): { id: string; name: string } {
-  const keys = MOOD_MAP[moodKey] ?? MOOD_MAP['afternoon'];
-  const idx = energy === 'Low' ? 0 : energy === 'Medium' ? 1 : 2;
-  return P[keys[idx]];
+  const pool = (MOOD_MAP[moodKey] ?? MOOD_MAP['afternoon'])[energy];
+  const key = pool[Math.floor(Math.random() * pool.length)];
+  return P[key];
 }
 
 export function useMoodAnalyzer() {
