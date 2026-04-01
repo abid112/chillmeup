@@ -14,82 +14,135 @@ export interface MoodResult {
 }
 
 // ---------------------------------------------------------------------------
-// Spotify editorial playlist IDs — expanded pool for variety.
-// Format: open.spotify.com/playlist/{id}
+// 50 Spotify editorial playlist IDs across all genres and moods.
 // ---------------------------------------------------------------------------
 const P = {
-  rainyDay:         { id: '37i9dQZF1DXbvABJXBIyiY', name: 'Rainy Day' },
+  // Chill & Ambient
   peacefulPiano:    { id: '37i9dQZF1DX4sWSpwq3LiO', name: 'Peaceful Piano' },
-  happyHits:        { id: '37i9dQZF1DXdPec7aLTmlC', name: 'Happy Hits!' },
-  rockClassics:     { id: '37i9dQZF1DWXRqgorJj26U', name: 'Rock Classics' },
-  topHits:          { id: '37i9dQZF1DXcBWIGoYBM5M', name: "Today's Top Hits" },
   deepFocus:        { id: '37i9dQZF1DWZeKCadgRdKQ', name: 'Deep Focus' },
-  moodBooster:      { id: '37i9dQZF1DXe5W6diBIV3E', name: 'Mood Booster' },
-  afternoonAco:     { id: '37i9dQZF1DX2sk7MV3rcaX', name: 'Afternoon Acoustic' },
-  softPop:          { id: '37i9dQZF1DX1clOuib1KtQ', name: 'Soft Pop Hits' },
-  mint:             { id: '37i9dQZF1DX4dyzvuaRJ0n', name: 'mint' },
-  allOut2010s:      { id: '37i9dQZF1DX5Ejj0EkURtP', name: 'All Out 2010s' },
-  jazzVibes:        { id: '37i9dQZF1DXbITWG1ZJKYt', name: 'Jazz Vibes' },
   vocalChills:      { id: '37i9dQZF1DX9oc9LtHUgJi', name: 'Vocal Chills' },
-  sleepyHollow:     { id: '37i9dQZF1DWZd79rJ6a7lp', name: 'Sleep' },
+  sleep:            { id: '37i9dQZF1DWZd79rJ6a7lp', name: 'Sleep' },
+  jazzVibes:        { id: '37i9dQZF1DXbITWG1ZJKYt', name: 'Jazz Vibes' },
+  afternoonAco:     { id: '37i9dQZF1DX2sk7MV3rcaX', name: 'Afternoon Acoustic' },
+  chillHits:        { id: '37i9dQZF1DX4WYpdgoIcn6', name: 'Chill Hits' },
+  bedroomPop:       { id: '37i9dQZF1DXcrsgIhaq5KG', name: 'Bedroom Pop' },
+  lofiMorning:      { id: '37i9dQZF1DXZXTi1Rll8OO', name: 'Lofi Morning' },
+  chillVibes:       { id: '37i9dQZF1DX3rxVfibe1L0', name: 'Chill Vibes' },
+  classicalFocus:   { id: '37i9dQZF1DX7K31eHFPCZn', name: 'Classical Focus' },
   epicConcentration:{ id: '37i9dQZF1DX9sIqqvKsjEL', name: 'Epic Concentration' },
+
+  // Rain & Melancholic
+  rainyDay:         { id: '37i9dQZF1DXbvABJXBIyiY', name: 'Rainy Day' },
+  softPop:          { id: '37i9dQZF1DX1clOuib1KtQ', name: 'Soft Pop Hits' },
+  indiefolk:        { id: '37i9dQZF1DX9B7LXpDLxLg', name: 'Indie Folk' },
+  indiePop:         { id: '37i9dQZF1DXdbXrPNafg9d', name: 'Indie Pop' },
+
+  // Happy & Upbeat
+  happyHits:        { id: '37i9dQZF1DXdPec7aLTmlC', name: 'Happy Hits!' },
+  topHits:          { id: '37i9dQZF1DXcBWIGoYBM5M', name: "Today's Top Hits" },
+  moodBooster:      { id: '37i9dQZF1DXe5W6diBIV3E', name: 'Mood Booster' },
+  mint:             { id: '37i9dQZF1DX4dyzvuaRJ0n', name: 'mint' },
+  popRising:        { id: '37i9dQZF1DWUa8ZRTfalHk', name: 'Pop Rising' },
+  popRemix:         { id: '37i9dQZF1DXfNsLX1B3E3I', name: 'Pop Remix' },
+  morningMood:      { id: '37i9dQZF1DX0jgyAiPl8Af', name: 'Morning Mood' },
+  singInTheCar:     { id: '37i9dQZF1DX5IDZzS80KTq', name: 'Songs to Sing in the Car' },
+  summerHits:       { id: '37i9dQZF1DX2TOBHkh9KhS', name: 'Summer Hits' },
+  feelGoodFriday:   { id: '37i9dQZF1DXaXDsfgi6FrY', name: 'Feel-Good Friday' },
+
+  // Rock & High Energy
+  rockClassics:     { id: '37i9dQZF1DWXRqgorJj26U', name: 'Rock Classics' },
+  powerWorkout:     { id: '37i9dQZF1DX76Wlfdnj7AP', name: 'Power Workout' },
+  cardio:           { id: '37i9dQZF1DXdxcBWuJkbcy', name: 'Cardio' },
+  danceHits:        { id: '37i9dQZF1DX8FwnYE6PRvL', name: 'Dance Hits' },
+  dancePop:         { id: '37i9dQZF1DXaKIA8E7WcJj', name: 'Dance Pop' },
+
+  // Throwback Decades
+  allOut80s:        { id: '37i9dQZF1DXb57XqZUeg1f', name: 'All Out 80s' },
+  allOut90s:        { id: '37i9dQZF1DXbTxeAdrVG2l', name: 'All Out 90s' },
+  allOut2000s:      { id: '37i9dQZF1DX4o1uurG5WgQ', name: 'All Out 2000s' },
+  allOut2010s:      { id: '37i9dQZF1DX5Ejj0EkURtP', name: 'All Out 2010s' },
+  roadTrip:         { id: '37i9dQZF1DX8a8notNMX0H', name: 'Road Trip' },
+
+  // Hip-Hop & R&B
+  rapCaviar:        { id: '37i9dQZF1DX0XUsuxWHRQd', name: 'RapCaviar' },
+  goldSchool:       { id: '37i9dQZF1DXa0SIGtfBBUS', name: 'Gold School' },
+  rbHits:           { id: '37i9dQZF1DWXbap5R9HFCq', name: 'R&B Hits' },
+
+  // World / Latin / K-Pop
+  vivaLatino:       { id: '37i9dQZF1DXbSbnqxMTGx9', name: 'Viva Latino' },
+  kPopDaebak:       { id: '37i9dQZF1DX9tPFwdkgD8w', name: 'K-Pop Daebak' },
+  latinPop:         { id: '37i9dQZF1DX10zKzsJ2jyd', name: 'Latin Pop Hits' },
+
+  // Country
+  hotCountry:       { id: '37i9dQZF1DX1lVhptIYs6Z', name: 'Hot Country' },
+
+  // Electronic
+  electronicRising: { id: '37i9dQZF1DX8tZsk88tuQB', name: 'Electronic Rising' },
+
+  // Focus extras
+  brainFood:        { id: '37i9dQZF1DXWLeA8Omikj7', name: 'Brain Food' },
+
+  // Additional variety
+  acousticMorning:  { id: '37i9dQZF1DXZZbwlv3Vmtr', name: 'Acoustic Morning' },
+  loungeVibes:      { id: '37i9dQZF1DX9uKNf5jGX6m', name: 'Lounge Vibes' },
+  altHits:          { id: '37i9dQZF1DX1zVr5PvBOEP', name: 'Alternative Hits' },
 } as const;
 
 type PlaylistKey = keyof typeof P;
 
-// Each mood → pool per energy level. Random pick each run → lots of variety.
+// Each mood → pool per energy level. Random pick each run → max variety.
 // Keys must match: timeMod.toLowerCase().replace(' ', '')
 type EnergyPool = { Low: PlaylistKey[]; Medium: PlaylistKey[]; High: PlaylistKey[] };
 const MOOD_MAP: Record<string, EnergyPool> = {
   rain: {
-    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'sleepyHollow', 'vocalChills'],
-    Medium: ['rainyDay', 'peacefulPiano', 'jazzVibes', 'afternoonAco', 'vocalChills'],
-    High:   ['rainyDay', 'topHits', 'moodBooster', 'happyHits', 'softPop'],
+    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'sleep', 'vocalChills', 'lofiMorning', 'chillVibes', 'classicalFocus', 'acousticMorning', 'loungeVibes'],
+    Medium: ['rainyDay', 'peacefulPiano', 'jazzVibes', 'afternoonAco', 'vocalChills', 'indiefolk', 'softPop', 'chillHits', 'altHits', 'acousticMorning'],
+    High:   ['rainyDay', 'topHits', 'moodBooster', 'happyHits', 'softPop', 'indiePop', 'popRising', 'singInTheCar', 'altHits', 'electronicRising'],
   },
   sunnyDay: {
-    Low:    ['peacefulPiano', 'deepFocus', 'afternoonAco', 'softPop', 'jazzVibes'],
-    Medium: ['happyHits', 'topHits', 'moodBooster', 'mint', 'softPop'],
-    High:   ['happyHits', 'topHits', 'moodBooster', 'mint', 'allOut2010s'],
+    Low:    ['peacefulPiano', 'deepFocus', 'afternoonAco', 'softPop', 'jazzVibes', 'morningMood', 'chillVibes', 'chillHits', 'acousticMorning', 'hotCountry'],
+    Medium: ['happyHits', 'topHits', 'moodBooster', 'mint', 'softPop', 'popRising', 'feelGoodFriday', 'summerHits', 'vivaLatino', 'kPopDaebak'],
+    High:   ['happyHits', 'topHits', 'moodBooster', 'mint', 'allOut2010s', 'danceHits', 'dancePop', 'cardio', 'electronicRising', 'vivaLatino'],
   },
   clearNight: {
-    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'vocalChills', 'sleepyHollow'],
-    Medium: ['peacefulPiano', 'jazzVibes', 'vocalChills', 'softPop', 'afternoonAco'],
-    High:   ['happyHits', 'topHits', 'moodBooster', 'allOut2010s', 'mint'],
+    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'vocalChills', 'sleep', 'lofiMorning', 'chillVibes', 'classicalFocus', 'loungeVibes', 'acousticMorning'],
+    Medium: ['peacefulPiano', 'jazzVibes', 'vocalChills', 'softPop', 'afternoonAco', 'bedroomPop', 'chillHits', 'indiePop', 'rbHits', 'loungeVibes'],
+    High:   ['happyHits', 'topHits', 'moodBooster', 'allOut2010s', 'mint', 'dancePop', 'danceHits', 'summerHits', 'rapCaviar', 'electronicRising'],
   },
   cloudy: {
-    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'vocalChills', 'afternoonAco'],
-    Medium: ['rainyDay', 'peacefulPiano', 'jazzVibes', 'deepFocus', 'softPop'],
-    High:   ['happyHits', 'topHits', 'moodBooster', 'mint', 'allOut2010s'],
+    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'vocalChills', 'afternoonAco', 'lofiMorning', 'chillVibes', 'brainFood', 'acousticMorning', 'loungeVibes'],
+    Medium: ['rainyDay', 'peacefulPiano', 'jazzVibes', 'deepFocus', 'softPop', 'bedroomPop', 'indiefolk', 'chillHits', 'altHits', 'goldSchool'],
+    High:   ['happyHits', 'topHits', 'moodBooster', 'mint', 'allOut2010s', 'indiePop', 'popRising', 'feelGoodFriday', 'altHits', 'electronicRising'],
   },
   snow: {
-    Low:    ['peacefulPiano', 'rainyDay', 'jazzVibes', 'sleepyHollow', 'deepFocus'],
-    Medium: ['peacefulPiano', 'afternoonAco', 'jazzVibes', 'vocalChills', 'softPop'],
-    High:   ['happyHits', 'topHits', 'moodBooster', 'allOut2010s', 'mint'],
+    Low:    ['peacefulPiano', 'rainyDay', 'jazzVibes', 'sleep', 'deepFocus', 'vocalChills', 'classicalFocus', 'chillVibes', 'acousticMorning', 'loungeVibes'],
+    Medium: ['peacefulPiano', 'afternoonAco', 'jazzVibes', 'vocalChills', 'softPop', 'chillHits', 'indiefolk', 'lofiMorning', 'hotCountry', 'acousticMorning'],
+    High:   ['happyHits', 'topHits', 'moodBooster', 'allOut2010s', 'mint', 'allOut80s', 'allOut90s', 'singInTheCar', 'hotCountry', 'roadTrip'],
   },
   thunder: {
-    Low:    ['rockClassics', 'deepFocus', 'epicConcentration', 'jazzVibes', 'vocalChills'],
-    Medium: ['rockClassics', 'epicConcentration', 'topHits', 'allOut2010s', 'happyHits'],
-    High:   ['rockClassics', 'topHits', 'epicConcentration', 'allOut2010s', 'moodBooster'],
+    Low:    ['rockClassics', 'deepFocus', 'epicConcentration', 'jazzVibes', 'brainFood', 'classicalFocus', 'vocalChills', 'chillVibes', 'altHits', 'loungeVibes'],
+    Medium: ['rockClassics', 'epicConcentration', 'topHits', 'allOut2010s', 'happyHits', 'allOut90s', 'rapCaviar', 'danceHits', 'altHits', 'goldSchool'],
+    High:   ['rockClassics', 'topHits', 'epicConcentration', 'allOut2010s', 'moodBooster', 'powerWorkout', 'cardio', 'danceHits', 'electronicRising', 'altHits'],
   },
   morning: {
-    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'afternoonAco', 'vocalChills'],
-    Medium: ['happyHits', 'topHits', 'moodBooster', 'mint', 'softPop'],
-    High:   ['happyHits', 'topHits', 'moodBooster', 'allOut2010s', 'mint'],
+    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'afternoonAco', 'vocalChills', 'morningMood', 'lofiMorning', 'chillVibes', 'acousticMorning', 'classicalFocus'],
+    Medium: ['happyHits', 'topHits', 'moodBooster', 'mint', 'softPop', 'popRising', 'feelGoodFriday', 'morningMood', 'kPopDaebak', 'hotCountry'],
+    High:   ['happyHits', 'topHits', 'moodBooster', 'allOut2010s', 'mint', 'danceHits', 'cardio', 'powerWorkout', 'vivaLatino', 'electronicRising'],
   },
   afternoon: {
-    Low:    ['deepFocus', 'peacefulPiano', 'afternoonAco', 'jazzVibes', 'softPop'],
-    Medium: ['happyHits', 'topHits', 'moodBooster', 'mint', 'allOut2010s'],
-    High:   ['topHits', 'happyHits', 'moodBooster', 'allOut2010s', 'mint'],
+    Low:    ['deepFocus', 'peacefulPiano', 'afternoonAco', 'jazzVibes', 'softPop', 'brainFood', 'chillHits', 'lofiMorning', 'loungeVibes', 'acousticMorning'],
+    Medium: ['happyHits', 'topHits', 'moodBooster', 'mint', 'allOut2010s', 'popRemix', 'vivaLatino', 'kPopDaebak', 'latinPop', 'goldSchool'],
+    High:   ['topHits', 'happyHits', 'moodBooster', 'allOut2010s', 'mint', 'rapCaviar', 'danceHits', 'dancePop', 'electronicRising', 'roadTrip'],
   },
   evening: {
-    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'vocalChills', 'afternoonAco'],
-    Medium: ['happyHits', 'jazzVibes', 'vocalChills', 'softPop', 'mint'],
-    High:   ['happyHits', 'topHits', 'moodBooster', 'allOut2010s', 'mint'],
+    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'vocalChills', 'afternoonAco', 'chillVibes', 'bedroomPop', 'sleep', 'loungeVibes', 'acousticMorning'],
+    Medium: ['happyHits', 'jazzVibes', 'vocalChills', 'softPop', 'mint', 'rbHits', 'allOut90s', 'allOut2000s', 'latinPop', 'goldSchool'],
+    High:   ['happyHits', 'topHits', 'moodBooster', 'allOut2010s', 'mint', 'danceHits', 'dancePop', 'rapCaviar', 'electronicRising', 'roadTrip'],
   },
   latenight: {
-    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'sleepyHollow', 'vocalChills'],
-    Medium: ['rainyDay', 'jazzVibes', 'vocalChills', 'deepFocus', 'softPop'],
-    High:   ['topHits', 'happyHits', 'moodBooster', 'allOut2010s', 'mint'],
+    Low:    ['peacefulPiano', 'deepFocus', 'jazzVibes', 'sleep', 'vocalChills', 'lofiMorning', 'classicalFocus', 'chillVibes', 'loungeVibes', 'acousticMorning'],
+    Medium: ['rainyDay', 'jazzVibes', 'vocalChills', 'deepFocus', 'softPop', 'rbHits', 'bedroomPop', 'chillHits', 'goldSchool', 'latinPop'],
+    High:   ['topHits', 'happyHits', 'moodBooster', 'allOut2010s', 'mint', 'rapCaviar', 'danceHits', 'allOut2000s', 'electronicRising', 'roadTrip'],
   },
 };
 
