@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 
 export type MoodState = 'idle' | 'analyzing' | 'result';
-export type EnergyLevel = 'Low' | 'Medium' | 'High' | null;
+export type EnergyLevel = 'Low' | 'Medium' | 'High';
 
 export interface MoodResult {
   moodLabel: string;
@@ -10,6 +10,7 @@ export interface MoodResult {
   playlistName: string;
   playlistDescription: string;
   searchQuery: string;
+  detectedEnergy: EnergyLevel;
 }
 
 const FAKE_MESSAGES = [
@@ -19,18 +20,82 @@ const FAKE_MESSAGES = [
   "Cross-referencing your aura with 47 million songs…",
   "Calibrating nostalgia index…",
   "Harmonizing soundwaves…",
-  "Synthesizing current frequency…"
+  "Synthesizing current frequency…",
+  "Analyzing session entropy…",
+  "Reading ambient engagement patterns…",
+  "Parsing micro-interaction velocity…",
 ];
 
 const ANALYSIS_STEPS = [
   { progress: 12, text: "Detecting your location…" },
   { progress: 28, text: "Analyzing local weather conditions…" },
-  { progress: 41, text: "Scanning browsing patterns…" },
+  { progress: 41, text: "Scanning browser activity…" },
+  { progress: 55, text: "Reading engagement patterns…" },
   { progress: 63, text: "Estimating your current mood…" },
   { progress: 75, text: "Checking time-of-day energy levels…" },
   { progress: 90, text: "Matching music vibes…" },
   { progress: 100, text: "Generating playlist…" },
 ];
+
+/**
+ * Auto-detect energy level from browser signals:
+ * - Time of day (natural human energy curve)
+ * - Cookie count (more cookies → more active browsing session)
+ * - localStorage item count (accumulated session data)
+ * - Session visit count stored in localStorage
+ * - Performance timing (page load speed as a proxy for device/connection activity)
+ * - Random jitter to keep results feeling unique
+ */
+function detectEnergyFromBrowser(): EnergyLevel {
+  const hour = new Date().getHours();
+
+  // Natural energy curve by time of day
+  let baseScore = 0;
+  if (hour >= 6 && hour < 10) baseScore = 3;       // Morning surge
+  else if (hour >= 10 && hour < 13) baseScore = 4;  // Peak morning
+  else if (hour >= 13 && hour < 15) baseScore = 2;  // Post-lunch dip
+  else if (hour >= 15 && hour < 18) baseScore = 3;  // Afternoon recovery
+  else if (hour >= 18 && hour < 21) baseScore = 2;  // Evening wind-down
+  else baseScore = 1;                               // Late night / sleep hours
+
+  // Cookie density — more cookies = more active multi-site session
+  try {
+    const cookieCount = document.cookie ? document.cookie.split(';').length : 0;
+    if (cookieCount > 5) baseScore += 1;
+    if (cookieCount > 10) baseScore += 1;
+  } catch (_) { /* ignore */ }
+
+  // localStorage density — accumulated browsing footprint
+  try {
+    const lsCount = localStorage.length;
+    if (lsCount > 3) baseScore += 1;
+    if (lsCount > 8) baseScore += 1;
+  } catch (_) { /* ignore */ }
+
+  // Repeat visit bonus — returning users have more engaged sessions
+  try {
+    const visits = parseInt(localStorage.getItem('moodtune_visits') ?? '0', 10);
+    const newVisits = visits + 1;
+    localStorage.setItem('moodtune_visits', String(newVisits));
+    if (newVisits > 1) baseScore += 1;
+    if (newVisits > 3) baseScore += 1;
+  } catch (_) { /* ignore */ }
+
+  // Page load performance as a signal — fast load = high-activity device/network
+  try {
+    const navTiming = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+    if (navTiming && navTiming.loadEventEnd - navTiming.startTime < 1000) {
+      baseScore += 1;
+    }
+  } catch (_) { /* ignore */ }
+
+  // Add controlled randomness (+/- 1) so results vary each time
+  baseScore += Math.floor(Math.random() * 3) - 1;
+
+  if (baseScore >= 6) return 'High';
+  if (baseScore >= 3) return 'Medium';
+  return 'Low';
+}
 
 export function useMoodAnalyzer() {
   const [state, setState] = useState<MoodState>('idle');
@@ -47,44 +112,50 @@ export function useMoodAnalyzer() {
     setResult(null);
   }, []);
 
-  const analyze = useCallback(async (energy: EnergyLevel) => {
+  const analyze = useCallback(async () => {
     setState('analyzing');
     setProgress(0);
-    
-    // Start animation loop for fake messages
-    let messageInterval = setInterval(() => {
-      setFakeMessage(FAKE_MESSAGES[Math.floor(Math.random() * FAKE_MESSAGES.length)]);
-    }, 1500);
 
-    // Simulate steps
+    // Start animation loop for fake messages
+    const messageInterval = setInterval(() => {
+      setFakeMessage(FAKE_MESSAGES[Math.floor(Math.random() * FAKE_MESSAGES.length)]);
+    }, 1400);
+
+    // Simulate steps with timing
     for (const step of ANALYSIS_STEPS) {
       setStepText(step.text);
       setProgress(step.progress);
-      await new Promise(r => setTimeout(r, 800 + Math.random() * 400));
+      await new Promise(r => setTimeout(r, 700 + Math.random() * 400));
     }
 
     clearInterval(messageInterval);
 
-    // Actual logic
+    // Auto-detect energy from browser signals
+    const energy = detectEnergyFromBrowser();
+
+    // Fetch real weather via proxy
     let weatherCondition = 'Clear';
-    let weatherText = 'Unknown Weather';
-    
+    let weatherText = 'Clear skies';
+
     try {
       const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 3000 });
       });
       const res = await fetch(`/api/weather?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
       if (res.ok) {
-        const data = await res.json();
-        weatherCondition = data.condition || 'Clear';
-        weatherText = `${data.condition} · ${data.location || 'Local'}`;
+        const data = await res.json() as { condition: string; location: string | null };
+        weatherCondition = data.condition ?? 'Clear';
+        weatherText = data.location
+          ? `${data.condition} · ${data.location}`
+          : data.condition;
       } else {
         weatherText = 'Weather unavailable';
       }
-    } catch (e) {
+    } catch (_) {
       weatherText = 'Weather unavailable';
     }
 
+    // Time of day
     const hour = new Date().getHours();
     let timeMod = '';
     let timeText = '';
@@ -102,6 +173,7 @@ export function useMoodAnalyzer() {
       timeText = 'Late Night 🌌';
     }
 
+    // Map weather + time → mood
     let moodLabel = 'Vibes';
     let search = 'playlist';
     let playlistName = 'Your Mix';
@@ -136,6 +208,7 @@ export function useMoodAnalyzer() {
       playlistName = `${timeMod} Flow`;
     }
 
+    // Apply energy modifier
     if (energy === 'Low') {
       search += ' chill ambient lo-fi';
       moodLabel = 'Calm ' + moodLabel;
@@ -146,17 +219,17 @@ export function useMoodAnalyzer() {
 
     const randomMoods = ['Chill', 'Nostalgic', 'Focus', 'Party', 'Romantic', 'Adventure', 'Deep Thinking'];
     const randomMood = randomMoods[Math.floor(Math.random() * randomMoods.length)];
-    
+
     setResult({
       moodLabel: `${randomMood} ${moodLabel}`,
       weatherText,
       timeText,
       playlistName,
-      playlistDescription: `A curated selection of tracks matching your current ${randomMood.toLowerCase()} energy and the ${timeText.toLowerCase()} atmosphere.`,
-      searchQuery: encodeURIComponent(search)
+      playlistDescription: `A curated selection of tracks matching your ${energy.toLowerCase()} energy and the ${timeText.toLowerCase()} atmosphere.`,
+      searchQuery: encodeURIComponent(search),
+      detectedEnergy: energy,
     });
     setState('result');
-
   }, []);
 
   return { state, progress, stepText, fakeMessage, result, analyze, reset };

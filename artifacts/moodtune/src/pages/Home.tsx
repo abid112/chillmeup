@@ -1,17 +1,16 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Play, MapPin, Clock, Cloud, Music, RefreshCcw, Activity } from "lucide-react";
-import { useMoodAnalyzer, EnergyLevel } from "@/hooks/useMoodAnalyzer";
+import { Sparkles, Play, Clock, Cloud, Music, RefreshCcw, Activity, Zap } from "lucide-react";
+import { useMoodAnalyzer } from "@/hooks/useMoodAnalyzer";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const { state, progress, stepText, fakeMessage, result, analyze, reset } = useMoodAnalyzer();
   const [age, setAge] = useState("");
-  const [energy, setEnergy] = useState<EnergyLevel>(null);
   const [gender, setGender] = useState("");
 
   const handleStart = () => {
-    analyze(energy);
+    analyze();
   };
 
   return (
@@ -34,7 +33,7 @@ export default function Home() {
             className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-6 max-w-2xl mx-auto"
           >
             <div className="text-center mb-12 space-y-4">
-              <motion.div 
+              <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
@@ -51,30 +50,16 @@ export default function Home() {
             </div>
 
             <div className="w-full space-y-8 bg-card/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-white/80">Current Energy Level</label>
-                <div className="flex gap-3">
-                  {["Low", "Medium", "High"].map((level) => (
-                    <button
-                      key={level}
-                      onClick={() => setEnergy(level as EnergyLevel)}
-                      data-testid={`energy-${level.toLowerCase()}`}
-                      className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 border ${
-                        energy === level 
-                          ? "bg-primary text-primary-foreground border-primary shadow-[0_0_20px_rgba(168,85,247,0.3)]" 
-                          : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20"
-                      }`}
-                    >
-                      {level}
-                    </button>
-                  ))}
-                </div>
+              {/* Auto-detect badge */}
+              <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary/10 border border-primary/20 text-sm text-primary/90">
+                <Zap className="w-4 h-4 shrink-0" />
+                <span>Energy level will be detected automatically from your browser activity</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-3">
                   <label className="text-sm font-medium text-white/80">Age Range (Optional)</label>
-                  <select 
+                  <select
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
                     data-testid="select-age"
@@ -89,7 +74,7 @@ export default function Home() {
                 </div>
                 <div className="space-y-3">
                   <label className="text-sm font-medium text-white/80">Gender (Optional)</label>
-                  <select 
+                  <select
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
                     data-testid="select-gender"
@@ -104,7 +89,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <Button 
+              <Button
                 onClick={handleStart}
                 className="w-full py-6 text-lg rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold shadow-[0_0_30px_rgba(168,85,247,0.4)] transition-all hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(168,85,247,0.6)]"
                 data-testid="button-start"
@@ -125,19 +110,13 @@ export default function Home() {
             className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-6 max-w-lg mx-auto"
           >
             <div className="relative w-48 h-48 mb-12 flex items-center justify-center">
-              <motion.div 
-                animate={{ 
-                  scale: [1, 1.5, 1],
-                  opacity: [0.3, 0.6, 0.3]
-                }}
+              <motion.div
+                animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.6, 0.3] }}
                 transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
                 className="absolute inset-0 rounded-full border border-primary/50"
               />
-              <motion.div 
-                animate={{ 
-                  scale: [1, 1.8, 1],
-                  opacity: [0.2, 0.4, 0.2]
-                }}
+              <motion.div
+                animate={{ scale: [1, 1.8, 1], opacity: [0.2, 0.4, 0.2] }}
                 transition={{ repeat: Infinity, duration: 2, delay: 0.5, ease: "easeInOut" }}
                 className="absolute inset-0 rounded-full border border-blue-500/40"
               />
@@ -147,7 +126,7 @@ export default function Home() {
 
             <div className="w-full space-y-6 text-center">
               <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
-                <motion.div 
+                <motion.div
                   className="h-full bg-gradient-to-r from-primary to-blue-500"
                   initial={{ width: "0%" }}
                   animate={{ width: `${progress}%` }}
@@ -155,7 +134,7 @@ export default function Home() {
                 />
               </div>
               <div className="space-y-2">
-                <motion.p 
+                <motion.p
                   key={stepText}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -163,7 +142,7 @@ export default function Home() {
                 >
                   {stepText}
                 </motion.p>
-                <motion.p 
+                <motion.p
                   key={fakeMessage}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -185,7 +164,7 @@ export default function Home() {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] py-12 px-6 max-w-3xl mx-auto w-full"
           >
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
@@ -198,41 +177,50 @@ export default function Home() {
               <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/60">
                 {result.moodLabel}
               </h2>
-              
+
               <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-white/60 mt-4">
                 <div className="flex items-center gap-1.5">
                   <Cloud className="w-4 h-4" />
-                  {result.weatherText}
+                  <span data-testid="text-weather">{result.weatherText}</span>
                 </div>
                 <div className="w-1 h-1 rounded-full bg-white/20" />
                 <div className="flex items-center gap-1.5">
                   <Clock className="w-4 h-4" />
-                  {result.timeText}
+                  <span data-testid="text-time">{result.timeText}</span>
+                </div>
+                <div className="w-1 h-1 rounded-full bg-white/20" />
+                <div className="flex items-center gap-1.5">
+                  <Zap className="w-4 h-4 text-primary/80" />
+                  <span data-testid="text-energy" className="text-primary/80">
+                    {result.detectedEnergy} Energy
+                  </span>
                 </div>
               </div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               initial={{ y: 40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
               className="w-full bg-card/40 backdrop-blur-2xl border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl relative group"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
+
               <div className="p-8 sm:p-10 flex flex-col sm:flex-row gap-8 items-center sm:items-start relative z-10">
                 <div className="w-48 h-48 shrink-0 rounded-2xl bg-gradient-to-br from-primary via-blue-600 to-purple-800 shadow-[0_0_40px_rgba(168,85,247,0.3)] flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-500">
                   <div className="absolute inset-0 bg-black/20 mix-blend-overlay" />
                   <Music className="w-20 h-20 text-white/80" />
                 </div>
-                
+
                 <div className="flex-1 text-center sm:text-left space-y-4">
-                  <h3 className="text-3xl font-bold text-white">{result.playlistName}</h3>
+                  <h3 className="text-3xl font-bold text-white" data-testid="text-playlist-name">
+                    {result.playlistName}
+                  </h3>
                   <p className="text-white/70 leading-relaxed">
                     {result.playlistDescription}
                   </p>
                   <div className="pt-4">
-                    <a 
+                    <a
                       href={`https://open.spotify.com/search/${result.searchQuery}`}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -247,13 +235,13 @@ export default function Home() {
               </div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
               className="mt-12"
             >
-              <button 
+              <button
                 onClick={reset}
                 data-testid="button-reset"
                 className="flex items-center gap-2 text-white/50 hover:text-white transition-colors"
