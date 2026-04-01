@@ -420,6 +420,22 @@ export default function Home() {
         )}
 
       </AnimatePresence>
+
+      {/* Footer */}
+      <div className="fixed bottom-0 left-0 right-0 z-20 flex justify-center pb-4 pointer-events-none">
+        <p className="text-white/30 text-xs text-center pointer-events-auto">
+          Made with ❤️ by Abid Hasan.{" "}
+          If you like this tool,{" "}
+          <a
+            href="https://buymeacoffee.com/abid_hasan112"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:text-white/60 transition-colors"
+          >
+            Buy Me a Coffee ☕
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
