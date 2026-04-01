@@ -133,7 +133,7 @@ const ANALYSIS_STEPS = [
   { progress: 63, text: "Estimating your current mood…" },
   { progress: 75, text: "Checking time-of-day energy levels…" },
   { progress: 90, text: "Matching music vibes…" },
-  { progress: 100, text: "Curating your playlist…" },
+  { progress: 100, text: "Picking your playlist…" },
 ];
 
 function detectEnergyFromBrowser(): EnergyLevel {
