@@ -14,34 +14,31 @@ export interface MoodResult {
 }
 
 // ---------------------------------------------------------------------------
-// Curated Spotify editorial playlist IDs (Spotify-owned, always public)
+// Only IDs verified to be live Spotify editorial playlists.
 // Format: open.spotify.com/playlist/{id}
 // ---------------------------------------------------------------------------
 const P = {
   rainyDay:      { id: '37i9dQZF1DXbvABJXBIyiY', name: 'Rainy Day' },
   peacefulPiano: { id: '37i9dQZF1DX4sWSpwq3LiO', name: 'Peaceful Piano' },
-  lofiBeat:      { id: '37i9dQZF1DWWv7o6mJSWv7', name: 'Lo-Fi Beats' },
-  chillHits:     { id: '37i9dQZF1DX0SM0LYsmbMT', name: 'Chill Hits' },
   happyHits:     { id: '37i9dQZF1DXdPec7aLTmlC', name: 'Happy Hits!' },
-  feelinGood:    { id: '37i9dQZF1DX9XIFQuFvzM4', name: 'Feelin\' Good' },
   rockClassics:  { id: '37i9dQZF1DWXRqgorJj26U', name: 'Rock Classics' },
-  acousticHits:  { id: '37i9dQZF1DX5trt9riIlJP', name: 'Acoustic Hits' },
 } as const;
 
 type PlaylistKey = keyof typeof P;
 
-// mood key → [Low, Medium, High] playlist
+// mood key → [Low energy, Medium energy, High energy]
+// Keys must match the output of: timeMod.toLowerCase().replace(' ', '')
 const MOOD_MAP: Record<string, [PlaylistKey, PlaylistKey, PlaylistKey]> = {
-  rain:       ['rainyDay',      'rainyDay',      'chillHits'],
-  sunnyDay:   ['peacefulPiano', 'happyHits',     'feelinGood'],
-  clearNight: ['lofiBeat',      'chillHits',     'chillHits'],
-  cloudy:     ['lofiBeat',      'chillHits',     'happyHits'],
-  snow:       ['peacefulPiano', 'acousticHits',  'happyHits'],
-  thunder:    ['chillHits',     'rockClassics',  'rockClassics'],
-  morning:    ['lofiBeat',      'happyHits',     'feelinGood'],
-  afternoon:  ['chillHits',     'happyHits',     'feelinGood'],
-  evening:    ['lofiBeat',      'chillHits',     'chillHits'],
-  lateNight:  ['lofiBeat',      'lofiBeat',      'chillHits'],
+  rain:       ['peacefulPiano', 'rainyDay',      'rainyDay'],
+  sunnyDay:   ['peacefulPiano', 'happyHits',     'happyHits'],
+  clearNight: ['peacefulPiano', 'peacefulPiano', 'happyHits'],
+  cloudy:     ['peacefulPiano', 'rainyDay',      'happyHits'],
+  snow:       ['peacefulPiano', 'peacefulPiano', 'happyHits'],
+  thunder:    ['rockClassics',  'rockClassics',  'rockClassics'],
+  morning:    ['peacefulPiano', 'happyHits',     'happyHits'],
+  afternoon:  ['peacefulPiano', 'happyHits',     'happyHits'],
+  evening:    ['peacefulPiano', 'peacefulPiano', 'happyHits'],
+  latenight:  ['peacefulPiano', 'peacefulPiano', 'happyHits'],
 };
 
 // ---------------------------------------------------------------------------
