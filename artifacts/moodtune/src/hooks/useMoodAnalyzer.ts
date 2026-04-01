@@ -93,9 +93,9 @@ function detectEnergyFromBrowser(): EnergyLevel {
   } catch (_) { /* ignore */ }
 
   try {
-    const visits = parseInt(localStorage.getItem('moodtune_visits') ?? '0', 10);
+    const visits = parseInt(localStorage.getItem('chillmeup_visits') ?? '0', 10);
     const newVisits = visits + 1;
-    localStorage.setItem('moodtune_visits', String(newVisits));
+    localStorage.setItem('chillmeup_visits', String(newVisits));
     if (newVisits > 1) baseScore += 1;
     if (newVisits > 3) baseScore += 1;
   } catch (_) { /* ignore */ }

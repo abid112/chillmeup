@@ -78,9 +78,11 @@ export default function Home() {
               >
                 <Sparkles className="w-8 h-8 text-primary" />
               </motion.div>
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white to-white/60">Find the Perfect Music for Your Mood</h1>
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white to-white/60">
+                Chill Me Up!
+              </h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-lg mx-auto">
-                We'll analyze your vibe and find your perfect playlist.
+                Find the perfect song for your mood — powered by your location, the weather, and the time of day.
               </p>
             </div>
 
@@ -175,7 +177,7 @@ export default function Home() {
                 Allow Location Access
               </h2>
               <p className="text-white/60 leading-relaxed text-base">
-                MoodTune uses your <strong className="text-white/80">device's exact location</strong> to fetch live local weather — so your playlist matches the sky above you right now.
+                Chill Me Up! uses your <strong className="text-white/80">device's exact location</strong> to fetch live local weather — so your playlist matches the sky above you right now.
               </p>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-white/50">
                 <Navigation className="w-3 h-3" />

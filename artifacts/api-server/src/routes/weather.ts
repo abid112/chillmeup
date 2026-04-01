@@ -32,7 +32,7 @@ router.get("/weather", async (req, res) => {
 
     const [weatherRes, geoRes] = await Promise.all([
       fetch(weatherUrl, { headers: { "Accept": "application/json" } }),
-      fetch(geoUrl, { headers: { "Accept": "application/json", "User-Agent": "MoodTune/1.0" } }),
+      fetch(geoUrl, { headers: { "Accept": "application/json", "User-Agent": "ChillMeUp/1.0" } }),
     ]);
 
     if (!weatherRes.ok) {
