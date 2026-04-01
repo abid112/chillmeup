@@ -361,9 +361,19 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
               <div className="p-8 sm:p-10 flex flex-col sm:flex-row gap-8 items-center sm:items-start relative z-10">
-                <div className="w-48 h-48 shrink-0 rounded-2xl bg-gradient-to-br from-primary via-blue-600 to-purple-800 shadow-[0_0_40px_rgba(168,85,247,0.3)] flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-500">
-                  <div className="absolute inset-0 bg-black/20 mix-blend-overlay" />
-                  <Music className="w-20 h-20 text-white/80" />
+                <div className="w-48 h-48 shrink-0 rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.3)] relative overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                  {result.playlistImageUrl ? (
+                    <img
+                      src={result.playlistImageUrl}
+                      alt={result.playlistName}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-primary via-blue-600 to-purple-800 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/20 mix-blend-overlay" />
+                      <Music className="w-20 h-20 text-white/80" />
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex-1 text-center sm:text-left space-y-4">

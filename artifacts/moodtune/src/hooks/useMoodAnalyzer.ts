@@ -10,6 +10,7 @@ export interface MoodResult {
   playlistName: string;
   playlistDescription: string;
   playlistId: string;
+  playlistImageUrl: string | null;
   detectedEnergy: EnergyLevel;
 }
 
@@ -322,6 +323,16 @@ export function useMoodAnalyzer() {
 
     const { id: playlistId, name: playlistName } = resolvePlaylist(moodKey, energy);
 
+    // Fetch the real playlist cover art from our proxy (Spotify oEmbed, no auth needed)
+    let playlistImageUrl: string | null = null;
+    try {
+      const imgRes = await fetch(`/api/playlist-image?id=${encodeURIComponent(playlistId)}`);
+      if (imgRes.ok) {
+        const imgData = await imgRes.json() as { imageUrl: string | null };
+        playlistImageUrl = imgData.imageUrl ?? null;
+      }
+    } catch (_) { /* fall through — UI will show gradient fallback */ }
+
     const randomMoods = ['Chill', 'Nostalgic', 'Focus', 'Party', 'Romantic', 'Adventure', 'Deep Thinking'];
     const randomMood = randomMoods[Math.floor(Math.random() * randomMoods.length)];
 
@@ -332,6 +343,7 @@ export function useMoodAnalyzer() {
       playlistName,
       playlistDescription: `A curated Spotify playlist for your ${energy.toLowerCase()} energy and ${timeText.toLowerCase()} mood.`,
       playlistId,
+      playlistImageUrl,
       detectedEnergy: energy,
     });
     setState('result');
