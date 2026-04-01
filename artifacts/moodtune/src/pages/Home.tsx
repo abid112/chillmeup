@@ -179,22 +179,47 @@ export default function Home() {
               </h2>
 
               <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-white/60 mt-4">
-                <div className="flex items-center gap-1.5">
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.6 }}
+                  className="flex items-center gap-1.5"
+                >
                   <Cloud className="w-4 h-4" />
                   <span data-testid="text-weather">{result.weatherText}</span>
-                </div>
-                <div className="w-1 h-1 rounded-full bg-white/20" />
-                <div className="flex items-center gap-1.5">
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.9, duration: 0.4 }}
+                  className="w-1 h-1 rounded-full bg-white/20"
+                />
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.1, duration: 0.6 }}
+                  className="flex items-center gap-1.5"
+                >
                   <Clock className="w-4 h-4" />
                   <span data-testid="text-time">{result.timeText}</span>
-                </div>
-                <div className="w-1 h-1 rounded-full bg-white/20" />
-                <div className="flex items-center gap-1.5">
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.5, duration: 0.4 }}
+                  className="w-1 h-1 rounded-full bg-white/20"
+                />
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.7, duration: 0.6 }}
+                  className="flex items-center gap-1.5"
+                >
                   <Zap className="w-4 h-4 text-primary/80" />
                   <span data-testid="text-energy" className="text-primary/80">
                     {result.detectedEnergy} Energy
                   </span>
-                </div>
+                </motion.div>
               </div>
             </motion.div>
 

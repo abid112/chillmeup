@@ -116,6 +116,26 @@ export function useMoodAnalyzer() {
     setState('analyzing');
     setProgress(0);
 
+    // Kick off geolocation + weather fetch immediately in the background
+    // so it runs in parallel with the animation steps
+    const weatherPromise: Promise<{ condition: string; weatherText: string }> = (async () => {
+      try {
+        const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 8000 });
+        });
+        const res = await fetch(`/api/weather?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
+        if (res.ok) {
+          const data = await res.json() as { condition: string; location: string | null };
+          const condition = data.condition ?? 'Clear';
+          const text = data.location ? `${condition} · ${data.location}` : condition;
+          return { condition, weatherText: text };
+        }
+        return { condition: 'Clear', weatherText: 'Weather unavailable' };
+      } catch (_) {
+        return { condition: 'Clear', weatherText: 'Weather unavailable' };
+      }
+    })();
+
     // Start animation loop for fake messages
     const messageInterval = setInterval(() => {
       setFakeMessage(FAKE_MESSAGES[Math.floor(Math.random() * FAKE_MESSAGES.length)]);
@@ -130,30 +150,11 @@ export function useMoodAnalyzer() {
 
     clearInterval(messageInterval);
 
+    // By now weather fetch should be complete (ran in parallel with animation)
+    const { condition: weatherCondition, weatherText } = await weatherPromise;
+
     // Auto-detect energy from browser signals
     const energy = detectEnergyFromBrowser();
-
-    // Fetch real weather via proxy
-    let weatherCondition = 'Clear';
-    let weatherText = 'Clear skies';
-
-    try {
-      const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 3000 });
-      });
-      const res = await fetch(`/api/weather?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
-      if (res.ok) {
-        const data = await res.json() as { condition: string; location: string | null };
-        weatherCondition = data.condition ?? 'Clear';
-        weatherText = data.location
-          ? `${data.condition} · ${data.location}`
-          : data.condition;
-      } else {
-        weatherText = 'Weather unavailable';
-      }
-    } catch (_) {
-      weatherText = 'Weather unavailable';
-    }
 
     // Time of day
     const hour = new Date().getHours();
