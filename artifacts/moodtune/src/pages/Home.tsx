@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Play, Clock, Cloud, Music, RefreshCcw, Activity, Zap, MapPin, Navigation } from "lucide-react";
+import { Sparkles, Clock, Cloud, Music, RefreshCcw, Activity, Zap, MapPin, Navigation } from "lucide-react";
 import { useMoodAnalyzer } from "@/hooks/useMoodAnalyzer";
 import { Button } from "@/components/ui/button";
 
@@ -389,9 +389,11 @@ export default function Home() {
                       target="_blank"
                       rel="noopener noreferrer"
                       data-testid="link-spotify"
-                      className="inline-flex items-center justify-center gap-2 bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold py-4 px-8 rounded-full transition-all hover:scale-105 shadow-[0_0_30px_rgba(29,185,84,0.3)]"
+                      className="inline-flex items-center justify-center gap-2.5 bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold py-4 px-8 rounded-full transition-all hover:scale-105 shadow-[0_0_30px_rgba(29,185,84,0.3)]"
                     >
-                      <Play className="w-5 h-5 fill-current" />
+                      <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current shrink-0" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.518 17.31a.75.75 0 0 1-1.032.25c-2.827-1.727-6.39-2.117-10.583-1.16a.75.75 0 0 1-.334-1.463c4.588-1.048 8.526-.597 11.7 1.341a.75.75 0 0 1 .249 1.032zm1.472-3.273a.938.938 0 0 1-1.29.308c-3.235-1.988-8.168-2.564-11.99-1.403a.937.937 0 1 1-.545-1.794c4.372-1.326 9.808-.683 13.517 1.6a.937.937 0 0 1 .308 1.289zm.127-3.407c-3.878-2.304-10.276-2.515-13.977-1.39a1.124 1.124 0 1 1-.653-2.151c4.248-1.29 11.306-1.04 15.775 1.607a1.125 1.125 0 0 1-1.145 1.934z"/>
+                      </svg>
                       Open on Spotify
                     </a>
                   </div>
