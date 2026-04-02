@@ -71,6 +71,27 @@ export default function Home() {
           >
             <div className="text-center mb-12 space-y-4">
               <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.5 }}
+                className="mb-2"
+              >
+                <span
+                  className="text-3xl md:text-4xl font-extrabold tracking-widest uppercase"
+                  style={{
+                    background: "linear-gradient(135deg, #e879f9 0%, #a855f7 40%, #818cf8 70%, #38bdf8 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    textShadow: "none",
+                    filter: "drop-shadow(0 0 18px rgba(168,85,247,0.55))",
+                    letterSpacing: "0.18em",
+                  }}
+                >
+                  Chill Me Up!
+                </span>
+              </motion.div>
+              <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
