@@ -177,15 +177,52 @@ function detectEnergyFromBrowser(): EnergyLevel {
   return 'Low';
 }
 
+// WMO weather code → condition string
+function wmoToCondition(code: number): string {
+  if (code === 0) return 'Clear';
+  if (code <= 3) return 'Clouds';
+  if (code <= 48) return 'Fog';
+  if (code <= 57) return 'Drizzle';
+  if (code <= 67) return 'Rain';
+  if (code <= 77) return 'Snow';
+  if (code <= 82) return 'Rain';
+  if (code <= 86) return 'Snow';
+  if (code >= 95) return 'Thunderstorm';
+  return 'Clear';
+}
+
 async function fetchWeather(lat: number, lon: number): Promise<{ condition: string; weatherText: string }> {
   try {
-    const res = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
-    if (res.ok) {
-      const data = await res.json() as { condition: string; location: string | null };
-      const condition = data.condition ?? 'Clear';
-      const text = data.location ? `${condition} · ${data.location}` : condition;
-      return { condition, weatherText: text };
+    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=weather_code,temperature_2m&timezone=auto`;
+    const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+
+    const [weatherRes, geoRes] = await Promise.all([
+      fetch(weatherUrl, { headers: { Accept: 'application/json' } }),
+      fetch(geoUrl, { headers: { Accept: 'application/json' } }),
+    ]);
+
+    if (!weatherRes.ok) return { condition: 'Clear', weatherText: 'Weather unavailable' };
+
+    const weatherData = await weatherRes.json() as {
+      current: { weather_code: number; temperature_2m: number };
+    };
+    const code = weatherData.current?.weather_code ?? 0;
+    const condition = wmoToCondition(code);
+
+    let locationName: string | null = null;
+    if (geoRes.ok) {
+      const geoData = await geoRes.json() as {
+        address?: { city?: string; town?: string; village?: string; country_code?: string };
+      };
+      const addr = geoData.address;
+      const city = addr?.city ?? addr?.town ?? addr?.village ?? null;
+      const country = addr?.country_code?.toUpperCase() ?? null;
+      if (city && country) locationName = `${city}, ${country}`;
+      else if (city) locationName = city;
     }
+
+    const text = locationName ? `${condition} · ${locationName}` : condition;
+    return { condition, weatherText: text };
   } catch (_) { /* fall through */ }
   return { condition: 'Clear', weatherText: 'Weather unavailable' };
 }
@@ -286,13 +323,15 @@ export function useMoodAnalyzer() {
 
     const { id: playlistId, name: playlistName } = resolvePlaylist(moodKey, energy);
 
-    // Fetch the real playlist cover art from our proxy (Spotify oEmbed, no auth needed)
+    // Fetch the real playlist cover art from Spotify oEmbed (free, no auth needed)
     let playlistImageUrl: string | null = null;
     try {
-      const imgRes = await fetch(`/api/playlist-image?id=${encodeURIComponent(playlistId)}`);
+      const spotifyUrl = `https://open.spotify.com/playlist/${encodeURIComponent(playlistId)}`;
+      const oembedUrl = `https://open.spotify.com/oembed?url=${encodeURIComponent(spotifyUrl)}`;
+      const imgRes = await fetch(oembedUrl, { headers: { Accept: 'application/json' } });
       if (imgRes.ok) {
-        const imgData = await imgRes.json() as { imageUrl: string | null };
-        playlistImageUrl = imgData.imageUrl ?? null;
+        const imgData = await imgRes.json() as { thumbnail_url?: string };
+        playlistImageUrl = imgData.thumbnail_url ?? null;
       }
     } catch (_) { /* fall through — UI will show gradient fallback */ }
 
