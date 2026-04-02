@@ -150,7 +150,7 @@ export default function Home() {
             </div>
             <p className="absolute bottom-4 left-0 right-0 text-white/25 text-xs text-center px-6">
               Made with ❤️ by Abid Hasan. If you love this tool, buy me a coffee{" "}
-              <a href="https://buymeacoffee.com/abid_hasan112" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white/50 transition-colors">from here ☕</a>
+              <a href="https://buymeacoffee.com/abid_hasan112" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white/50 transition-colors">Buy Me a Coffee ☕</a>
             </p>
           </motion.div>
         )}
