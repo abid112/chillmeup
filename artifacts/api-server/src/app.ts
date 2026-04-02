@@ -1,6 +1,7 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
+import path from "path";
 import router from "./routes";
 import { logger } from "./lib/logger";
 
@@ -29,6 +30,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve frontend static files
+const publicDir = path.resolve(__dirname, "../../moodtune/dist/public");
+app.use(express.static(publicDir));
+
 app.use("/api", router);
+
+// SPA fallback: serve index.html for all non-API routes
+app.get("*path", (_req, res) => {
+  res.sendFile(path.join(publicDir, "index.html"));
+});
 
 export default app;
