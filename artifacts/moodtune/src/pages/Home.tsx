@@ -67,7 +67,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20, filter: "blur(10px)" }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-6 max-w-2xl mx-auto"
+            className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-6 py-16 max-w-2xl mx-auto"
           >
             <div className="text-center mb-12 space-y-4">
               <motion.div
@@ -76,7 +76,7 @@ export default function Home() {
                 transition={{ delay: 0.15, duration: 0.5 }}
                 className="flex items-center justify-center gap-4 mb-6"
               >
-                <img src="/logo.png" alt="Chill Me Up! logo" className="w-16 h-16 drop-shadow-[0_0_20px_rgba(168,85,247,0.6)]" />
+                <img src="/logo.png" alt="Chill Me Up! logo" className="w-16 h-16 shrink-0 drop-shadow-[0_0_20px_rgba(168,85,247,0.6)]" />
                 <span
                   style={{
                     fontFamily: "'Pacifico', cursive",
@@ -148,7 +148,7 @@ export default function Home() {
                 </span>
               </Button>
             </div>
-            <p className="absolute bottom-4 left-0 right-0 text-white/25 text-xs text-center px-6">
+            <p className="mt-auto pt-8 text-white/25 text-xs text-center px-6">
               Made with ❤️ by Abid Hasan. If you love this tool, {" "}
               <a href="https://buymeacoffee.com/abid_hasan112" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white/50 transition-colors">Buy Me a Coffee ☕</a>
             </p>
@@ -163,7 +163,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-6 max-w-md mx-auto text-center"
+            className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-6 py-16 max-w-md mx-auto text-center"
           >
             {/* Pulsing location icon */}
             <div className="relative w-36 h-36 mb-10 flex items-center justify-center">
@@ -242,7 +242,7 @@ export default function Home() {
                 Skip — use time of day only
               </button>
             </motion.div>
-            <p className="absolute bottom-4 left-0 right-0 text-white/25 text-xs text-center px-6">
+            <p className="mt-auto pt-8 text-white/25 text-xs text-center px-6">
               Made with ❤️ by Abid Hasan. If you love this tool, {" "}
               <a href="https://buymeacoffee.com/abid_hasan112" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white/50 transition-colors">Buy Me a Coffee ☕</a>
             </p>
@@ -257,7 +257,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-6 max-w-lg mx-auto"
+            className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-6 py-16 max-w-lg mx-auto"
           >
             <div className="relative w-48 h-48 mb-12 flex items-center justify-center">
               <motion.div
@@ -302,7 +302,7 @@ export default function Home() {
                 </motion.p>
               </div>
             </div>
-            <p className="absolute bottom-4 left-0 right-0 text-white/25 text-xs text-center px-6">
+            <p className="mt-auto pt-8 text-white/25 text-xs text-center px-6">
               Made with ❤️ by Abid Hasan. If you love this tool, {" "}
               <a href="https://buymeacoffee.com/abid_hasan112" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white/50 transition-colors">Buy Me a Coffee ☕</a>
             </p>
