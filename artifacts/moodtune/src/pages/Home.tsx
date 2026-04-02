@@ -148,6 +148,10 @@ export default function Home() {
                 </span>
               </Button>
             </div>
+            <p className="absolute bottom-4 left-0 right-0 text-white/25 text-xs text-center px-6">
+              Made with ❤️ by Abid Hasan.{" "}
+              <a href="https://buymeacoffee.com/abid_hasan112" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white/50 transition-colors">Buy Me a Coffee ☕</a>
+            </p>
           </motion.div>
         )}
 
@@ -238,6 +242,10 @@ export default function Home() {
                 Skip — use time of day only
               </button>
             </motion.div>
+            <p className="absolute bottom-4 left-0 right-0 text-white/25 text-xs text-center px-6">
+              Made with ❤️ by Abid Hasan.{" "}
+              <a href="https://buymeacoffee.com/abid_hasan112" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white/50 transition-colors">Buy Me a Coffee ☕</a>
+            </p>
           </motion.div>
         )}
 
@@ -294,6 +302,10 @@ export default function Home() {
                 </motion.p>
               </div>
             </div>
+            <p className="absolute bottom-4 left-0 right-0 text-white/25 text-xs text-center px-6">
+              Made with ❤️ by Abid Hasan.{" "}
+              <a href="https://buymeacoffee.com/abid_hasan112" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white/50 transition-colors">Buy Me a Coffee ☕</a>
+            </p>
           </motion.div>
         )}
 
@@ -430,26 +442,14 @@ export default function Home() {
                 Try Again
               </button>
             </motion.div>
+            <p className="text-white/25 text-xs text-center px-6 pb-6 pt-4">
+              Made with ❤️ by Abid Hasan.{" "}
+              <a href="https://buymeacoffee.com/abid_hasan112" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white/50 transition-colors">Buy Me a Coffee ☕</a>
+            </p>
           </motion.div>
         )}
 
       </AnimatePresence>
-
-      {/* Footer */}
-      <div className="fixed bottom-0 left-0 right-0 z-20 flex justify-center pb-4 pointer-events-none">
-        <p className="text-white/30 text-xs text-center pointer-events-auto">
-          Made with ❤️ by Abid Hasan.{" "}
-          If you like this tool,{" "}
-          <a
-            href="https://buymeacoffee.com/abid_hasan112"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline underline-offset-2 hover:text-white/60 transition-colors"
-          >
-            Buy Me a Coffee ☕
-          </a>
-        </p>
-      </div>
     </div>
   );
 }
