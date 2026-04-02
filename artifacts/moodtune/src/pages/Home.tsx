@@ -73,31 +73,24 @@ export default function Home() {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.5 }}
-                className="mb-2"
+                transition={{ delay: 0.15, duration: 0.5 }}
+                className="flex items-center justify-center gap-4 mb-6"
               >
+                <img src="/logo.png" alt="Chill Me Up! logo" className="w-16 h-16 drop-shadow-[0_0_20px_rgba(168,85,247,0.6)]" />
                 <span
-                  className="text-3xl md:text-4xl font-extrabold tracking-widest uppercase"
                   style={{
-                    background: "linear-gradient(135deg, #e879f9 0%, #a855f7 40%, #818cf8 70%, #38bdf8 100%)",
+                    fontFamily: "'Pacifico', cursive",
+                    background: "linear-gradient(135deg, #e879f9 0%, #a855f7 45%, #818cf8 75%, #38bdf8 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
-                    textShadow: "none",
-                    filter: "drop-shadow(0 0 18px rgba(168,85,247,0.55))",
-                    letterSpacing: "0.18em",
+                    filter: "drop-shadow(0 0 16px rgba(168,85,247,0.5))",
+                    fontSize: "clamp(1.6rem, 5vw, 2.4rem)",
+                    lineHeight: 1.2,
                   }}
                 >
                   Chill Me Up!
                 </span>
-              </motion.div>
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-                className="mx-auto mb-6"
-              >
-                <img src="/logo.png" alt="Chill Me Up! logo" className="w-20 h-20 block mx-auto drop-shadow-[0_0_20px_rgba(168,85,247,0.6)]" />
               </motion.div>
               <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white to-white/60">Find the Perfect Music for Your Mood</h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-lg mx-auto">
